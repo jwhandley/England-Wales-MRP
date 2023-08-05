@@ -67,8 +67,8 @@ survey <- read_stata("data/BES2019_W24_Panel_v24.0.dta", col_select = all_of(sur
                            2 ~ "Labour",
                            3 ~ "Liberal Democrat",
                            0 ~ "Wouldn't vote",
-                           9999 ~ "Wouldn't vote",
-                           NA ~ "Wouldn't vote",
+                           9999 ~ NA,
+                           NA ~ NA,
                            .default = "Other"),
          vote = factor(vote, levels = c("Conservative","Labour","Liberal Democrat","Other","Wouldn't vote")),
          wt = wt_new_W24,
@@ -83,7 +83,7 @@ survey <- read_stata("data/BES2019_W24_Panel_v24.0.dta", col_select = all_of(sur
 # brms allows for categorical response variables which makes modelling multi-party elections a lot easier
 # For a more complicated model, I would include interaction terms but for now I just want to see if I can get it working reasonably well
 fit <- brm(vote ~ Turnout19 + Con19 + Lab19 + LD19 + degree + sex + (1|age) + (1|pcon_code),
-           data = sample_n(survey, size = 5000),
+           data = survey,
            prior = c(
              prior(normal(0, 5), class = Intercept),
              prior(normal(0, 1), class = b),
@@ -91,7 +91,7 @@ fit <- brm(vote ~ Turnout19 + Con19 + Lab19 + LD19 + degree + sex + (1|age) + (1
              prior(exponential(0.5), class = sd, dpar = muLabour),
              prior(exponential(0.5), class = sd, dpar = muLiberalDemocrat),
              prior(exponential(0.5), class = sd, dpar = muOther),
-             prior(exponential(0.5), class = sd, dpar = muDidntvote)
+             prior(exponential(0.5), class = sd, dpar = muWouldntvote)
            ),
            family = categorical(refcat="Conservative"),
            iter = 1000,

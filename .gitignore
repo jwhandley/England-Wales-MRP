@@ -3,5 +3,6 @@
 .RData
 .Ruserdata
 boundaries/*
-data/*
+*.dta
+*.csv
 *.RDS

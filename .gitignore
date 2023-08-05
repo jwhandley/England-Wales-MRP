@@ -2,7 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
-boundaries/*/
+boundaries/*
+!*.md
 *.dta
 *.csv
 *.RDS
